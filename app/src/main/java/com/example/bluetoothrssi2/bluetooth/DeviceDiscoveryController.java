@@ -113,6 +113,10 @@ public final class DeviceDiscoveryController {
         }
     }
 
+    public void stopScanningAndKeepDialog() {
+        stopScanning();
+    }
+
     public boolean isShowing() {
         return dialog != null && dialog.isShowing();
     }

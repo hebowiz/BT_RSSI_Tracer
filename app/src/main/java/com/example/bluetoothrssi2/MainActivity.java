@@ -650,7 +650,7 @@ public final class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         if (discoveryController != null) {
-            discoveryController.dismiss();
+            discoveryController.stopScanningAndKeepDialog();
         }
         unregisterBluetoothStateReceiver();
         repository.removeListener(this);
