@@ -14,7 +14,7 @@ public class MeasurementRepositoryTest {
     public void sessionCalculatesStatisticsAndBecomesSaveable() {
         MeasurementRepository repository = new MeasurementRepository();
 
-        repository.beginSession("Headset", "00:11:22:33:44:55", "Audio/Video");
+        repository.beginSession("Headset", "00:11:22:33:44:55", "DUAL", "Audio/Video");
         repository.markMeasuring();
         repository.addSample(0.125, -70);
         repository.addSample(1.250, -50);
@@ -22,6 +22,7 @@ public class MeasurementRepositoryTest {
 
         MeasurementSnapshot snapshot = repository.snapshot();
         assertEquals(MeasurementState.STOPPED, snapshot.getState());
+        assertEquals("DUAL", snapshot.getTargetType());
         assertEquals("Audio/Video", snapshot.getTargetClass());
         assertEquals(2, snapshot.getSamples().size());
         assertEquals(-50, snapshot.getLatestRssi());
@@ -34,7 +35,7 @@ public class MeasurementRepositoryTest {
     @Test
     public void selectingAnotherTargetCanDiscardSaveEligibilityWithoutClearingData() {
         MeasurementRepository repository = new MeasurementRepository();
-        repository.beginSession("Old", "00:00:00:00:00:01", "Peripheral");
+        repository.beginSession("Old", "00:00:00:00:00:01", "CLASSIC", "Peripheral");
         repository.markMeasuring();
         repository.addSample(0.5, -65);
         repository.finishSession();

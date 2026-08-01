@@ -39,6 +39,7 @@ public final class MeasurementService extends Service {
     private static final String ACTION_STOP = "com.example.bluetoothrssi2.action.STOP_MEASUREMENT";
     private static final String EXTRA_TARGET_NAME = "target_name";
     private static final String EXTRA_TARGET_ADDRESS = "target_address";
+    private static final String EXTRA_TARGET_TYPE = "target_type";
     private static final String EXTRA_TARGET_CLASS = "target_class";
     private static final String EXTRA_DELAY_SECONDS = "delay_seconds";
     private static final String EXTRA_DURATION_SECONDS = "duration_seconds";
@@ -59,6 +60,7 @@ public final class MeasurementService extends Service {
     private PowerManager.WakeLock wakeLock;
     private String targetName = "";
     private String targetAddress = "";
+    private String targetType = "";
     private String targetClass = "";
     private int delaySeconds;
     private double durationSeconds = Double.POSITIVE_INFINITY;
@@ -70,6 +72,7 @@ public final class MeasurementService extends Service {
             Context context,
             String targetName,
             String targetAddress,
+            String targetType,
             String targetClass,
             int delaySeconds,
             double durationSeconds) {
@@ -77,6 +80,7 @@ public final class MeasurementService extends Service {
                 .setAction(ACTION_START)
                 .putExtra(EXTRA_TARGET_NAME, targetName)
                 .putExtra(EXTRA_TARGET_ADDRESS, targetAddress)
+                .putExtra(EXTRA_TARGET_TYPE, targetType)
                 .putExtra(EXTRA_TARGET_CLASS, targetClass)
                 .putExtra(EXTRA_DELAY_SECONDS, delaySeconds)
                 .putExtra(EXTRA_DURATION_SECONDS, durationSeconds);
@@ -124,6 +128,7 @@ public final class MeasurementService extends Service {
         }
         targetName = valueOrEmpty(intent.getStringExtra(EXTRA_TARGET_NAME));
         targetAddress = valueOrEmpty(intent.getStringExtra(EXTRA_TARGET_ADDRESS));
+        targetType = valueOrEmpty(intent.getStringExtra(EXTRA_TARGET_TYPE));
         targetClass = valueOrEmpty(intent.getStringExtra(EXTRA_TARGET_CLASS));
         delaySeconds = Math.max(0, intent.getIntExtra(EXTRA_DELAY_SECONDS, 0));
         durationSeconds = intent.getDoubleExtra(EXTRA_DURATION_SECONDS, Double.POSITIVE_INFINITY);
@@ -140,7 +145,7 @@ public final class MeasurementService extends Service {
         }
 
         sessionActive = true;
-        repository.beginSession(targetName, targetAddress, targetClass);
+        repository.beginSession(targetName, targetAddress, targetType, targetClass);
         acquireWakeLock();
         handler.postDelayed(beginMeasurementRunnable, delaySeconds * 1_000L);
     }

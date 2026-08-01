@@ -271,6 +271,7 @@ public final class DeviceDiscoveryController {
             DiscoveredDevice discovered = new DiscoveredDevice(
                     name,
                     address,
+                    BluetoothTypeFormatter.format(bluetoothDevice.getType()),
                     BluetoothClassFormatter.format(bluetoothClass),
                     rssi);
             devicesByAddress.put(address, discovered);

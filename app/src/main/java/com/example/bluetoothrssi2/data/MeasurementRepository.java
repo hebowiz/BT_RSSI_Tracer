@@ -23,6 +23,7 @@ public final class MeasurementRepository {
     private MeasurementState state = MeasurementState.IDLE;
     private String targetName = "";
     private String targetAddress = "";
+    private String targetType = "";
     private String targetClass = "";
     private long rssiSum;
     private int latestRssi;
@@ -46,10 +47,12 @@ public final class MeasurementRepository {
     public synchronized void beginSession(
             @NonNull String name,
             @NonNull String address,
+            @NonNull String bluetoothType,
             @NonNull String bluetoothClass) {
         samples.clear();
         targetName = name;
         targetAddress = address;
+        targetType = bluetoothType;
         targetClass = bluetoothClass;
         rssiSum = 0L;
         latestRssi = 0;
@@ -121,6 +124,7 @@ public final class MeasurementRepository {
                 state,
                 targetName,
                 targetAddress,
+                targetType,
                 targetClass,
                 new ArrayList<>(samples),
                 latestRssi,

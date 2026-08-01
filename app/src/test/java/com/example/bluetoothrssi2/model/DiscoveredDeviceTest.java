@@ -12,6 +12,7 @@ public class DiscoveredDeviceTest {
         DiscoveredDevice device = new DiscoveredDevice(
                 "Headset",
                 "00:11:22:33:44:55",
+                "DUAL",
                 "Audio/Video",
                 -70);
 

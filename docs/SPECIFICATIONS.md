@@ -36,12 +36,16 @@
 
 1. デバイス名
 2. BDアドレス
-3. Bluetooth Class
-4. RSSI（単位表記は `dBm`）
+3. Bluetooth TYPE
+4. Bluetooth Class
+5. RSSI（単位表記は `dBm`）
 
 - 一覧行は2行構成を維持し、高さを `56dp` 以上とする。
 - 行内の上下余白は、操作性と視認性を保ちながら一覧の表示件数を増やせるよう適度に詰める。
-- 1行目にデバイス名を表示し、2行目には左からBDアドレス、Bluetooth Class、RSSIの順に表示する。
+- 左列は1行目にデバイス名、2行目にBDアドレスを表示する。
+- その右の列は1行目にBluetooth TYPE、2行目にBluetooth Classを表示し、さらに右側へRSSIを表示する。
+- Bluetooth TYPEは `BluetoothDevice.getType()` の結果を `CLASSIC`、`LE`、`DUAL`、`UNKNOWN` のいずれかで表示する。
+- ダイアログ内のBluetooth TYPEには `Type:` の接頭辞を付けない。
 - Bluetooth ClassはInquiry結果のClass of Deviceから大分類を読み取り、`Audio/Video` のような短い英語表記とする。
 - ダイアログ内では文字数を抑えるため、Bluetooth Classに `Class:`、RSSIに `RSSI:` の接頭辞を付けない。
 - Bluetooth Classを取得または判別できない場合は `Unknown` と表示する。
@@ -92,7 +96,7 @@
 参考アプリ RF Monitor の接続端末表示と同じ構成にする。
 
 - メイン画面上部の `TARGET` ボタンの横に、選択した端末の情報を表示する。
-- 1行目にデバイス名、2行目にBDアドレスと `Class: <Bluetooth Class>` を横並びで表示する。
+- 1行目にデバイス名と `Type: <Bluetooth TYPE>`、2行目にBDアドレスと `Class: <Bluetooth Class>` を横並びで表示する。
 - デバイス名を取得できない場合は `Unknown` と表示する。
 - `TARGET` を再度押すと新しい空の一覧で探索を開始し、別の端末を選択できる。
 - 未保存データがあり `STOP/SAVE` ボタンが `SAVE` の状態で別のターゲット端末を選択した場合は、その時点で未保存データの保存権を破棄し、ボタン表示を `STOP` に戻す。
@@ -133,7 +137,8 @@ TARGET押下
 - 探索で検出された端末が、探索中のダイアログへ順次表示される。
 - 新規端末は検出順に一覧の末尾へ追加され、既存端末の順序が変化しない。
 - 同じBDアドレスの端末は複数行にならず、より大きいRSSIを検出した場合だけ表示値が更新される。
-- 各行にデバイス名、BDアドレス、Bluetooth Class、RSSIと `dBm` 単位が指定順で表示される。
+- 各行にデバイス名、BDアドレス、Bluetooth TYPE、Bluetooth Class、RSSIと `dBm` 単位が指定位置で表示される。
+- ダイアログではBluetooth TYPEがClassの上に接頭辞なしで表示される。
 - 名前を取得できない端末は `Unknown` と表示される。
 - 探索中はダイアログ上で探索中であることを確認できる。
 - 探索開始から60秒以内に探索が停止する。
@@ -142,7 +147,7 @@ TARGET押下
 - ダイアログを開き直すと、前回の端末一覧が表示されない。
 - 端末選択後に探索が継続しない。
 - 端末を選択せずダイアログを閉じた場合も探索が継続しない。
-- 選択後はメイン画面の `TARGET` 横にデバイス名が表示され、2行目にBDアドレスとBluetooth Classが表示される。
+- 選択後はメイン画面の `TARGET` 横にデバイス名、BDアドレス、`Type: <Bluetooth TYPE>`、`Class: <Bluetooth Class>` が2行で表示される。
 - 権限要求中または権限拒否状態では探索を開始しない。
 - Bluetoothが無効な状態で `TARGET` を押すと、探索せずBluetoothをONにするよう案内される。
 
@@ -189,7 +194,7 @@ START                    STOP / SAVE
 
 - `TARGET` ボタンを画面上部に配置する。
 - ボタンの横に、選択済みターゲット端末の情報を2行で表示する。
-- 1行目はターゲット端末名、2行目はBDアドレスと `Class: <Bluetooth Class>` とする。
+- 1行目はターゲット端末名と `Type: <Bluetooth TYPE>`、2行目はBDアドレスと `Class: <Bluetooth Class>` とする。
 - 端末名を取得できない場合は `Unknown` と表示する。
 - `TARGET` 押下時の端末選択動作は「1. デバイス検出」に従う。
 
@@ -428,16 +433,17 @@ Time [sec],RSSI [dBm]
 - 再探索には、ユーザーによる `TARGET` の再押下が必要とする。
 - TARGET探索の停止は、すでにSTART済みのバックグラウンド測定を停止させない。
 
-### 4.3 Inquiryによる非周期サンプリング
+### 4.3 `startDiscovery()` による非周期サンプリング
 
-- RSSIの取得にはBluetooth ClassicのInquiry結果を使用する。
-- Inquiryの性質上、RSSIデータの取得周期は固定値として保証しない。
+- RSSIの取得にはターゲット端末のTYPEによる方式分岐を設けず、従来どおり `BluetoothAdapter.startDiscovery()` の検出結果を使用する。
+- `startDiscovery()` が同時に取得するClassic Inquiry結果とLE Scan結果を区別せず、選択済みBDアドレスと一致する検出結果を測定対象とする。
+- 検出処理の性質上、RSSIデータの取得周期は固定値として保証しない。
 - `Period` 設定、固定間隔タイマー、補間値によって疑似的に等間隔データを作らない。
 - 測定中にターゲット端末からの検出応答を受信したら、その時点のRSSIと実際の経過時間を直ちに測定データへ追加する。
 - 追加した測定値は、受信の都度リアルタイムに統計値とグラフへ反映する。
-- ターゲット端末の応答を処理したら、そのInquiryを停止して次のInquiryを開始し、次の検出機会を待つ。
-- 次の応答を取得するため、測定中はInquiryを必要に応じて繰り返す。
-- 1回のInquiryがターゲット未検出で終了した場合も、測定停止条件へ到達していなければ次のInquiryを開始する。
+- ターゲット端末の応答を処理したら、そのDiscoveryを停止して次のDiscoveryを開始し、次の検出機会を待つ。
+- 次の応答を取得するため、測定中はDiscoveryを必要に応じて繰り返す。
+- 1回のDiscoveryがターゲット未検出で終了した場合も、測定停止条件へ到達していなければ次のDiscoveryを開始する。
 - 各データ点の横軸値とCSVの `Time [sec]` には、固定周期から算出した値ではなく、実際に応答を受信した時刻に基づく経過秒を使用する。
 
 ### 4.4 Bluetoothリソースの解放

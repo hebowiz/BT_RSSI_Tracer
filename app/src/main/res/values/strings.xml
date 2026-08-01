@@ -10,7 +10,8 @@
     <string name="select_target">Select target</string>
     <string name="scanning">SCANNING...</string>
     <string name="unknown_device">Unknown</string>
-    <string name="target_device_format">%1$s\n%2$s  Class: %3$s</string>
+    <string name="target_type_format">Type: %1$s</string>
+    <string name="target_class_format">Class: %1$s</string>
     <string name="measurement_format">RSSI: %1$d, Min: %2$d, Max: %3$d, Avg: %4$.1f</string>
     <string name="bluetooth_not_supported">Bluetooth is not supported on this device.</string>
     <string name="bluetooth_enable_required">Turn Bluetooth on, then tap TARGET again.</string>

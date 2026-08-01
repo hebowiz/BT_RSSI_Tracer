@@ -59,6 +59,7 @@ public final class MainActivity extends AppCompatActivity
         implements DeviceDiscoveryController.Listener, MeasurementRepository.Listener {
     private static final String STATE_TARGET_NAME = "target_name";
     private static final String STATE_TARGET_ADDRESS = "target_address";
+    private static final String STATE_TARGET_TYPE = "target_type";
     private static final String STATE_TARGET_CLASS = "target_class";
     private static final int GRAPH_RANGE_SECONDS_1 = 30;
     private static final int GRAPH_RANGE_SECONDS_2 = 100;
@@ -73,7 +74,10 @@ public final class MainActivity extends AppCompatActivity
     private Button targetButton;
     private Button startButton;
     private Button stopSaveButton;
-    private TextView targetDeviceTextView;
+    private TextView targetDeviceNameTextView;
+    private TextView targetDeviceAddressTextView;
+    private TextView targetDeviceTypeTextView;
+    private TextView targetDeviceClassTextView;
     private TextView measurementTextView;
     private Spinner delaySpinner;
     private Spinner durationSpinner;
@@ -81,6 +85,7 @@ public final class MainActivity extends AppCompatActivity
     private LineGraphSeries<DataPoint> rssiSeries;
     private String selectedTargetName = "";
     private String selectedTargetAddress = "";
+    private String selectedTargetType = "";
     private String selectedTargetClass = "";
     private int renderedSampleCount;
     private int graphRangeMode;
@@ -123,6 +128,7 @@ public final class MainActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             selectedTargetName = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_NAME));
             selectedTargetAddress = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_ADDRESS));
+            selectedTargetType = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_TYPE));
             selectedTargetClass = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_CLASS));
         }
         updateTargetDisplay();
@@ -137,7 +143,10 @@ public final class MainActivity extends AppCompatActivity
         targetButton = findViewById(R.id.targetButton);
         startButton = findViewById(R.id.startButton);
         stopSaveButton = findViewById(R.id.stopSaveButton);
-        targetDeviceTextView = findViewById(R.id.targetDeviceTextView);
+        targetDeviceNameTextView = findViewById(R.id.targetDeviceNameTextView);
+        targetDeviceAddressTextView = findViewById(R.id.targetDeviceAddressTextView);
+        targetDeviceTypeTextView = findViewById(R.id.targetDeviceTypeTextView);
+        targetDeviceClassTextView = findViewById(R.id.targetDeviceClassTextView);
         measurementTextView = findViewById(R.id.measurementTextView);
         delaySpinner = findViewById(R.id.delaySpinner);
         durationSpinner = findViewById(R.id.durationSpinner);
@@ -292,7 +301,8 @@ public final class MainActivity extends AppCompatActivity
         String message = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
                 ? getString(R.string.bluetooth_permission_required)
                 : getString(R.string.location_permission_required);
-        targetDeviceTextView.setText(message);
+        targetDeviceNameTextView.setText(message);
+        clearTargetDetailViews();
         showTopToast(message);
         renderSnapshot(repository.snapshot());
     }
@@ -316,6 +326,7 @@ public final class MainActivity extends AppCompatActivity
     public void onDeviceSelected(@NonNull DiscoveredDevice device) {
         selectedTargetName = device.getName();
         selectedTargetAddress = device.getAddress();
+        selectedTargetType = device.getBluetoothType();
         selectedTargetClass = device.getBluetoothClass();
         if (repository.snapshot().isSaveAvailable()) {
             repository.discardPendingSave();
@@ -366,6 +377,7 @@ public final class MainActivity extends AppCompatActivity
                 this,
                 selectedTargetName,
                 selectedTargetAddress,
+                selectedTargetType,
                 selectedTargetClass,
                 delaySeconds,
                 durationSeconds);
@@ -494,14 +506,24 @@ public final class MainActivity extends AppCompatActivity
 
     private void updateTargetDisplay() {
         if (selectedTargetAddress.isEmpty()) {
-            targetDeviceTextView.setText(R.string.target_not_selected);
+            targetDeviceNameTextView.setText(R.string.target_not_selected);
+            clearTargetDetailViews();
         } else {
-            targetDeviceTextView.setText(getString(
-                    R.string.target_device_format,
-                    selectedTargetName,
-                    selectedTargetAddress,
+            targetDeviceNameTextView.setText(selectedTargetName);
+            targetDeviceAddressTextView.setText(selectedTargetAddress);
+            targetDeviceTypeTextView.setText(getString(
+                    R.string.target_type_format,
+                    selectedTargetType));
+            targetDeviceClassTextView.setText(getString(
+                    R.string.target_class_format,
                     selectedTargetClass));
         }
+    }
+
+    private void clearTargetDetailViews() {
+        targetDeviceAddressTextView.setText("");
+        targetDeviceTypeTextView.setText("");
+        targetDeviceClassTextView.setText("");
     }
 
     @Override
@@ -616,6 +638,7 @@ public final class MainActivity extends AppCompatActivity
         if (selectedTargetAddress.isEmpty() && !snapshot.getTargetAddress().isEmpty()) {
             selectedTargetName = snapshot.getTargetName();
             selectedTargetAddress = snapshot.getTargetAddress();
+            selectedTargetType = snapshot.getTargetType();
             selectedTargetClass = snapshot.getTargetClass();
             updateTargetDisplay();
         }
@@ -662,6 +685,7 @@ public final class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(STATE_TARGET_NAME, selectedTargetName);
         outState.putString(STATE_TARGET_ADDRESS, selectedTargetAddress);
+        outState.putString(STATE_TARGET_TYPE, selectedTargetType);
         outState.putString(STATE_TARGET_CLASS, selectedTargetClass);
         super.onSaveInstanceState(outState);
     }

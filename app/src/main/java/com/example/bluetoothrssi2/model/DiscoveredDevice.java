@@ -5,16 +5,19 @@ import androidx.annotation.NonNull;
 public final class DiscoveredDevice {
     private final String name;
     private final String address;
+    private final String bluetoothType;
     private final String bluetoothClass;
     private int rssi;
 
     public DiscoveredDevice(
             @NonNull String name,
             @NonNull String address,
+            @NonNull String bluetoothType,
             @NonNull String bluetoothClass,
             int rssi) {
         this.name = name;
         this.address = address;
+        this.bluetoothType = bluetoothType;
         this.bluetoothClass = bluetoothClass;
         this.rssi = rssi;
     }
@@ -27,6 +30,11 @@ public final class DiscoveredDevice {
     @NonNull
     public String getAddress() {
         return address;
+    }
+
+    @NonNull
+    public String getBluetoothType() {
+        return bluetoothType;
     }
 
     @NonNull
