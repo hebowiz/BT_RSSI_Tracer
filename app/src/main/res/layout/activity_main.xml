@@ -82,15 +82,37 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/rssiGraph"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/graphContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.36"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/targetRow" />
+        app:layout_constraintTop_toBottomOf="@id/targetRow">
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/rssiGraph"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="7dp"
+            app:layout_constraintBottom_toTopOf="@id/xAxisTitleTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/xAxisTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@string/time_axis_title"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/measurementTextView"
@@ -104,7 +126,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rssiGraph" />
+        app:layout_constraintTop_toBottomOf="@id/graphContainer" />
 
     <View
         android:id="@+id/futureContentSpace"

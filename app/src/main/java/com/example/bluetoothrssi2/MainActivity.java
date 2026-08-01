@@ -45,7 +45,6 @@ import com.example.bluetoothrssi2.model.MeasurementSnapshot;
 import com.example.bluetoothrssi2.model.RssiSample;
 import com.example.bluetoothrssi2.service.MeasurementService;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -64,7 +63,6 @@ public final class MainActivity extends AppCompatActivity
     private static final String STATE_TARGET_CLASS = "target_class";
     private static final int GRAPH_RANGE_SECONDS_1 = 30;
     private static final int GRAPH_RANGE_SECONDS_2 = 100;
-    private static final float HORIZONTAL_AXIS_CLEARANCE_LINES = 0.5f;
     private static final float MEASUREMENT_BUTTON_HEIGHT_RATIO = 0.075f;
 
     private final MeasurementRepository repository = MeasurementRepository.getInstance();
@@ -228,8 +226,6 @@ public final class MainActivity extends AppCompatActivity
         graph.getViewport().setMaxY(0.0);
         graph.getGridLabelRenderer().setPadding(
                 Math.round(16 * getResources().getDisplayMetrics().density));
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Time [sec]");
-        configureHorizontalAxisClearance();
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
@@ -255,17 +251,6 @@ public final class MainActivity extends AppCompatActivity
             }
             return false;
         });
-    }
-
-    private void configureHorizontalAxisClearance() {
-        GridLabelRenderer renderer = graph.getGridLabelRenderer();
-        float labelTextSize = renderer.getTextSize();
-        int originalLabelsSpace = renderer.getLabelsSpace();
-        int clearance = Math.round(labelTextSize * HORIZONTAL_AXIS_CLEARANCE_LINES);
-
-        renderer.setLabelsSpace(originalLabelsSpace - clearance);
-        renderer.setLabelHorizontalHeight(Math.round(
-                labelTextSize + originalLabelsSpace + clearance));
     }
 
     private void registerPermissionLaunchers() {

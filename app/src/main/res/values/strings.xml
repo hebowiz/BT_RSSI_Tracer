@@ -7,6 +7,7 @@
     <string name="save">SAVE</string>
     <string name="delay_seconds">Delay [sec]</string>
     <string name="duration_seconds">Duration [sec]</string>
+    <string name="time_axis_title">Time [sec]</string>
     <string name="select_target">Select target</string>
     <string name="scanning">SCANNING...</string>
     <string name="unknown_device">Unknown</string>
