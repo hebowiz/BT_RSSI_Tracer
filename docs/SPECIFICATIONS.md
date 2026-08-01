@@ -42,8 +42,9 @@
 - 一覧行は2行構成を維持し、高さを `56dp` 以上とする。
 - 行内の上下余白は、操作性と視認性を保ちながら一覧の表示件数を増やせるよう適度に詰める。
 - 1行目にデバイス名を表示し、2行目には左からBDアドレス、Bluetooth Class、RSSIの順に表示する。
-- Bluetooth ClassはInquiry結果のClass of Deviceから大分類を読み取り、`Class: Audio/Video` のような短い英語表記とする。
-- Bluetooth Classを取得または判別できない場合は `Class: Unknown` と表示する。
+- Bluetooth ClassはInquiry結果のClass of Deviceから大分類を読み取り、`Audio/Video` のような短い英語表記とする。
+- ダイアログ内では文字数を抑えるため、Bluetooth Classに `Class:`、RSSIに `RSSI:` の接頭辞を付けない。
+- Bluetooth Classを取得または判別できない場合は `Unknown` と表示する。
 
 デバイス名を取得できない場合は、デバイス名欄に短い代替表記として `Unknown` を表示する。
 
