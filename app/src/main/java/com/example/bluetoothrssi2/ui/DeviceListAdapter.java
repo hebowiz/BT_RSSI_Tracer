@@ -53,18 +53,24 @@ public final class DeviceListAdapter extends BaseAdapter {
         DiscoveredDevice device = getItem(position);
         holder.name.setText(device.getName());
         holder.address.setText(device.getAddress());
-        holder.rssi.setText(String.format(Locale.US, "%d dBm", device.getRssi()));
+        holder.bluetoothClass.setText(String.format(
+                Locale.US,
+                "Class: %s",
+                device.getBluetoothClass()));
+        holder.rssi.setText(String.format(Locale.US, "RSSI: %d dBm", device.getRssi()));
         return convertView;
     }
 
     private static final class ViewHolder {
         private final TextView name;
         private final TextView address;
+        private final TextView bluetoothClass;
         private final TextView rssi;
 
         private ViewHolder(View view) {
             name = view.findViewById(R.id.deviceNameTextView);
             address = view.findViewById(R.id.deviceAddressTextView);
+            bluetoothClass = view.findViewById(R.id.deviceClassTextView);
             rssi = view.findViewById(R.id.deviceRssiTextView);
         }
     }

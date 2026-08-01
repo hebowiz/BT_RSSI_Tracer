@@ -9,6 +9,7 @@ public final class MeasurementSnapshot {
     private final MeasurementState state;
     private final String targetName;
     private final String targetAddress;
+    private final String targetClass;
     private final List<RssiSample> samples;
     private final int latestRssi;
     private final int minRssi;
@@ -20,6 +21,7 @@ public final class MeasurementSnapshot {
             @NonNull MeasurementState state,
             @NonNull String targetName,
             @NonNull String targetAddress,
+            @NonNull String targetClass,
             @NonNull List<RssiSample> samples,
             int latestRssi,
             int minRssi,
@@ -29,6 +31,7 @@ public final class MeasurementSnapshot {
         this.state = state;
         this.targetName = targetName;
         this.targetAddress = targetAddress;
+        this.targetClass = targetClass;
         this.samples = Collections.unmodifiableList(samples);
         this.latestRssi = latestRssi;
         this.minRssi = minRssi;
@@ -50,6 +53,11 @@ public final class MeasurementSnapshot {
     @NonNull
     public String getTargetAddress() {
         return targetAddress;
+    }
+
+    @NonNull
+    public String getTargetClass() {
+        return targetClass;
     }
 
     @NonNull

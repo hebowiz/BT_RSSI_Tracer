@@ -3,6 +3,7 @@ package com.example.bluetoothrssi2.bluetooth;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -256,7 +257,22 @@ public final class DeviceDiscoveryController {
             if (name == null || name.trim().isEmpty()) {
                 name = activity.getString(R.string.unknown_device);
             }
-            DiscoveredDevice discovered = new DiscoveredDevice(name, address, rssi);
+            BluetoothClass bluetoothClass;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bluetoothClass = intent.getParcelableExtra(
+                        BluetoothDevice.EXTRA_CLASS,
+                        BluetoothClass.class);
+            } else {
+                bluetoothClass = intent.getParcelableExtra(BluetoothDevice.EXTRA_CLASS);
+            }
+            if (bluetoothClass == null) {
+                bluetoothClass = bluetoothDevice.getBluetoothClass();
+            }
+            DiscoveredDevice discovered = new DiscoveredDevice(
+                    name,
+                    address,
+                    BluetoothClassFormatter.format(bluetoothClass),
+                    rssi);
             devicesByAddress.put(address, discovered);
             devices.add(discovered);
             if (listAdapter != null) {

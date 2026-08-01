@@ -32,6 +32,15 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/deviceClassTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp" />
+
+        <TextView
             android:id="@+id/deviceRssiTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

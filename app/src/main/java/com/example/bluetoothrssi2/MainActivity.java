@@ -59,6 +59,7 @@ public final class MainActivity extends AppCompatActivity
         implements DeviceDiscoveryController.Listener, MeasurementRepository.Listener {
     private static final String STATE_TARGET_NAME = "target_name";
     private static final String STATE_TARGET_ADDRESS = "target_address";
+    private static final String STATE_TARGET_CLASS = "target_class";
     private static final int GRAPH_RANGE_SECONDS_1 = 30;
     private static final int GRAPH_RANGE_SECONDS_2 = 100;
     private static final float MEASUREMENT_BUTTON_HEIGHT_RATIO = 0.075f;
@@ -80,6 +81,7 @@ public final class MainActivity extends AppCompatActivity
     private LineGraphSeries<DataPoint> rssiSeries;
     private String selectedTargetName = "";
     private String selectedTargetAddress = "";
+    private String selectedTargetClass = "";
     private int renderedSampleCount;
     private int graphRangeMode;
     private boolean pendingStartAfterNotificationPermission;
@@ -121,6 +123,7 @@ public final class MainActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             selectedTargetName = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_NAME));
             selectedTargetAddress = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_ADDRESS));
+            selectedTargetClass = valueOrEmpty(savedInstanceState.getString(STATE_TARGET_CLASS));
         }
         updateTargetDisplay();
 
@@ -313,6 +316,7 @@ public final class MainActivity extends AppCompatActivity
     public void onDeviceSelected(@NonNull DiscoveredDevice device) {
         selectedTargetName = device.getName();
         selectedTargetAddress = device.getAddress();
+        selectedTargetClass = device.getBluetoothClass();
         if (repository.snapshot().isSaveAvailable()) {
             repository.discardPendingSave();
         }
@@ -362,6 +366,7 @@ public final class MainActivity extends AppCompatActivity
                 this,
                 selectedTargetName,
                 selectedTargetAddress,
+                selectedTargetClass,
                 delaySeconds,
                 durationSeconds);
     }
@@ -494,7 +499,8 @@ public final class MainActivity extends AppCompatActivity
             targetDeviceTextView.setText(getString(
                     R.string.target_device_format,
                     selectedTargetName,
-                    selectedTargetAddress));
+                    selectedTargetAddress,
+                    selectedTargetClass));
         }
     }
 
@@ -610,6 +616,7 @@ public final class MainActivity extends AppCompatActivity
         if (selectedTargetAddress.isEmpty() && !snapshot.getTargetAddress().isEmpty()) {
             selectedTargetName = snapshot.getTargetName();
             selectedTargetAddress = snapshot.getTargetAddress();
+            selectedTargetClass = snapshot.getTargetClass();
             updateTargetDisplay();
         }
         rssiSeries.resetData(new DataPoint[]{});
@@ -655,6 +662,7 @@ public final class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(STATE_TARGET_NAME, selectedTargetName);
         outState.putString(STATE_TARGET_ADDRESS, selectedTargetAddress);
+        outState.putString(STATE_TARGET_CLASS, selectedTargetClass);
         super.onSaveInstanceState(outState);
     }
 
