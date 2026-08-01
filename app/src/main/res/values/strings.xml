@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">BT Classic Scanner</string>
+    <string name="target">TARGET</string>
+    <string name="target_not_selected">Target not selected</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="save">SAVE</string>
+    <string name="delay_seconds">Delay [sec]</string>
+    <string name="duration_seconds">Duration [sec]</string>
+    <string name="select_target">Select target</string>
+    <string name="scanning">SCANNING...</string>
+    <string name="unknown_device">Unknown</string>
+    <string name="target_device_format">%1$s\n%2$s</string>
+    <string name="measurement_format">RSSI: %1$d, Min: %2$d, Max: %3$d, Avg: %4$.1f</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported on this device.</string>
+    <string name="bluetooth_enable_required">Turn Bluetooth on, then tap TARGET again.</string>
+    <string name="bluetooth_permission_required">Nearby devices permission is required.</string>
+    <string name="location_permission_required">Location permission is required to scan on this Android version.</string>
+    <string name="notification_permission_denied">Notifications are disabled; background measurement status may not be visible.</string>
+    <string name="storage_permission_required">Storage permission is required to save files.</string>
+    <string name="save_failed">Failed to save measurement files.</string>
+    <string name="screenshot_failed">CSV was saved, but the screenshot could not be saved.</string>
+    <string name="saved_path">Saved: %1$s</string>
+    <string name="measurement_notification_channel">RSSI measurement</string>
+    <string name="measurement_notification_waiting">Waiting to start measurement</string>
+    <string name="measurement_notification_active">Measuring %1$s</string>
+
+    <string-array name="delay_options">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="duration_options">
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>100</item>
+        <item>120</item>
+        <item>inf</item>
+    </string-array>
+</resources>
