@@ -156,7 +156,7 @@ public final class DeviceDiscoveryController {
         }
         unregisterReceiver();
         if (scanningIndicator != null) {
-            scanningIndicator.setVisibility(View.GONE);
+            scanningIndicator.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -173,7 +173,7 @@ public final class DeviceDiscoveryController {
         }
         unregisterReceiver();
         if (scanningIndicator != null) {
-            scanningIndicator.setVisibility(View.GONE);
+            scanningIndicator.setVisibility(View.INVISIBLE);
         }
     }
 
