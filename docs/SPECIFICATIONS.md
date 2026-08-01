@@ -1,6 +1,6 @@
-# BT Classic Scanner 仕様書
+# BT RSSI Tracer 仕様書
 
-この文書は、BT Classic Scanner の確定済み仕様を実装可能な形で記録する。
+この文書は、BT RSSI Tracer の確定済み仕様を実装可能な形で記録する。
 未記載の動作は未決定として扱い、参考アプリや旧実装から暗黙に補完しない。
 
 ## 1. デバイス検出
@@ -168,7 +168,7 @@ TARGET押下
 ### 2.2 配置順序
 
 ```text
-BT Classic Scanner  <Androidデバイス名>
+BT RSSI Tracer  <Androidデバイス名>
 ────────────────────────────────────────
 TARGET  <ターゲット端末名>
         <BDアドレス>
@@ -185,11 +185,13 @@ Delay [sec]              Duration [sec]
 START                    STOP / SAVE
 ```
 
-### 2.3 アプリタイトル
+### 2.3 アプリ名とアイコン
 
-- 画面最上部には、アプリタイトル `BT Classic Scanner` と、アプリを実行しているAndroid端末の名前を表示する。
+- 画面最上部には、アプリタイトル `BT RSSI Tracer` と、アプリを実行しているAndroid端末の名前を表示する。
 - 表示方法は参考アプリ RF Monitor と同様に、ActionBarのタイトルへアプリ名、メーカー名、モデル名を同一行で連結する。
-- 表示形式は `BT Classic Scanner <Build.MANUFACTURER> <Build.MODEL>` とする。
+- 表示形式は `BT RSSI Tracer <Build.MANUFACTURER> <Build.MODEL>` とする。
+- ランチャーアイコンは、RF Monitorと共通の白いBluetoothマークと電波のモチーフを使用する。
+- RF Monitorと識別できるよう、背景色はティール `#008C8C` とする。
 
 ### 2.4 ターゲット端末
 
@@ -203,7 +205,7 @@ START                    STOP / SAVE
 
 - ターゲット端末欄の下にRSSIグラフを配置する。
 - 描画ライブラリ、基本的な外観、凡例、リアルタイム更新、横スクロールおよびタップによる表示範囲切り替えは、参考アプリ RF Monitor のRSSIグラフを踏襲する。
-- BT Classic Scannerでは、選択したターゲット端末のRSSIを単一系列として描画する。
+- BT RSSI Tracerでは、選択したターゲット端末のRSSIを単一系列として描画する。
 - 縦軸は手動範囲とし、最小値を `-100`、最大値を `0` とする。
 - 縦軸の数値目盛りは表示するが、縦軸タイトルは表示しない。
 - 凡例は `RSSI [dBm]` と表示する。
@@ -277,7 +279,7 @@ RSSI: xx, Min: yy, Max: zz, Avg: aa.a
 ### 2.10 受け入れ条件
 
 - 画面要素が「タイトル、ターゲット端末、RSSIグラフ、測定値、測定条件、操作ボタン」の順に並ぶ。
-- タイトルに `BT Classic Scanner` と実行中のAndroid端末情報が表示される。
+- タイトルに `BT RSSI Tracer` と実行中のAndroid端末情報が表示される。
 - `TARGET` の横に、選択端末名とBDアドレスが2行で表示される。
 - RSSIグラフの縦軸が `-100` から `0` の範囲になる。
 - 縦軸タイトルが表示されず、凡例が `RSSI [dBm]` と表示される。
@@ -313,8 +315,8 @@ RSSI: xx, Min: yy, Max: zz, Avg: aa.a
 ### 3.2 保存場所とAndroidバージョン対応
 
 - 保存先は、ユーザーが参照できる共有ストレージの `Documents` とする。
-- `Documents` の直下にアプリ専用サブディレクトリ `BTClassicScanner` を作成し、CSVとPNGをその中へ保存する。
-- 保存先の論理パスは `Documents/BTClassicScanner` とする。
+- `Documents` の直下にアプリ専用サブディレクトリ `BT_RSSI_Tracer` を作成し、CSVとPNGをその中へ保存する。
+- 保存先の論理パスは `Documents/BT_RSSI_Tracer` とする。
 - Android 10（API 29）以降では、参考アプリ RF Monitor と同様にMediaStoreとScoped Storageを使用する。
 - Android 9（API 28）では、参考アプリ RF Monitor と同様に従来の共有外部ストレージAPIとストレージ権限を使用する。
 - MediaStoreへの保存に失敗した場合は、不完全なエントリを残さない。
@@ -332,11 +334,11 @@ RSSI: xx, Min: yy, Max: zz, Avg: aa.a
 - ターゲット端末名に含まれるスペースは `_` に置換する。
 - 端末名を取得できない場合は `Unknown` を使用する。
 
-### 3.4 RF Monitorと現行BT Classic Scannerのデータ形式比較
+### 3.4 RF Monitorと現行BT RSSI Tracerのデータ形式比較
 
 以下は、新しいCSV仕様を決定するための比較であり、新アプリのCSV列仕様を確定するものではない。
 
-| 項目 | 参考アプリ RF Monitor | 現行BT Classic Scanner |
+| 項目 | 参考アプリ RF Monitor | 現行BT RSSI Tracer |
 | --- | --- | --- |
 | ファイル形式 | CSV | 独自の空白区切りTXT |
 | 保存操作 | 測定停止後にユーザーが `SAVE` | 指定測定時間の終了時に自動保存 |
@@ -357,7 +359,7 @@ A Time,A PeerRssi,A PhoneRssi,A PeerErr,A AclErr,
 P Time,P PeerRssi,P PhoneRssi,P PeerErr,P AclErr
 ```
 
-現行BT Classic Scannerの保存内容は概ね次の構成になっている。
+現行BT RSSI Tracerの保存内容は概ね次の構成になっている。
 
 ```text
 <メモ>
@@ -397,7 +399,7 @@ Time [sec],RSSI [dBm]
 
 ### 3.7 受け入れ条件
 
-- 保存されたCSVとPNGが `Documents/BTClassicScanner` に存在する。
+- 保存されたCSVとPNGが `Documents/BT_RSSI_Tracer` に存在する。
 - CSVの先頭行が `Time [sec],RSSI [dBm]` になる。
 - CSVの各データ行が、経過秒とRSSIの2列だけで構成される。
 - CSVに端末情報や測定条件などのメタデータが含まれない。
@@ -407,7 +409,7 @@ Time [sec],RSSI [dBm]
 ### 3.8 保存結果の表示
 
 - 保存成功時の保存先表示は、参考アプリ RF Monitor の方式に準ずる。
-- CSVの保存成功後、画面上部のToastで `Saved: Documents/BTClassicScanner/<CSVファイル名>` と表示する。
+- CSVの保存成功後、画面上部のToastで `Saved: Documents/BT_RSSI_Tracer/<CSVファイル名>` と表示する。
 - CSVの保存に成功した場合だけ、対応するスクリーンショットPNGの保存を実行する。
 - 保存に失敗した場合は、成功時の保存先を表示せず、失敗したことをToastで通知する。
 

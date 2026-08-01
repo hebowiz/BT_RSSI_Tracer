@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BT Classic Scanner</string>
+    <string name="app_name">BT RSSI Tracer</string>
     <string name="target">TARGET</string>
     <string name="target_not_selected">Target not selected</string>
     <string name="start">START</string>

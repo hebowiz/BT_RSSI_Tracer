@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 public final class MeasurementFileSaver {
-    public static final String OUTPUT_DIRECTORY = "BTClassicScanner";
+    public static final String OUTPUT_DIRECTORY = "BT_RSSI_Tracer";
 
     private MeasurementFileSaver() {
     }
