@@ -10,6 +10,7 @@
     <string name="time_axis_title">Time [sec]</string>
     <string name="select_target">Select target</string>
     <string name="scanning">SCANNING...</string>
+    <string name="classic_only">Classic Only</string>
     <string name="unknown_device">Unknown</string>
     <string name="target_type_format">Type: %1$s</string>
     <string name="target_class_format">Class: %1$s</string>

@@ -92,7 +92,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/targetRow">
 
-        <com.jjoe64.graphview.GraphView
+        <com.example.bluetoothrssi2.ui.FramedGraphView
             android:id="@+id/rssiGraph"
             android:layout_width="0dp"
             android:layout_height="0dp"

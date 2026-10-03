@@ -9,12 +9,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.CheckBox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -37,11 +39,15 @@ public final class DeviceDiscoveryController {
 
     private static final long SCAN_LIMIT_MS = 60_000L;
     private static final long RESTART_DELAY_MS = 150L;
+    private static final String PREFERENCES_NAME = "device_discovery";
+    private static final String KEY_CLASSIC_ONLY = "classic_only";
 
     private final Activity activity;
     private final BluetoothAdapter bluetoothAdapter;
     private final Listener listener;
+    private final SharedPreferences preferences;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    // Displayed devices are a filtered view of the map's original discovery order.
     private final List<DiscoveredDevice> devices = new ArrayList<>();
     private final Map<String, DiscoveredDevice> devicesByAddress = new LinkedHashMap<>();
     private final Runnable timeoutRunnable = this::finishScanning;
@@ -52,6 +58,7 @@ public final class DeviceDiscoveryController {
     private View scanningIndicator;
     private boolean receiverRegistered;
     private boolean scanning;
+    private boolean classicOnly;
 
     public DeviceDiscoveryController(
             @NonNull Activity activity,
@@ -60,6 +67,7 @@ public final class DeviceDiscoveryController {
         this.activity = activity;
         this.bluetoothAdapter = bluetoothAdapter;
         this.listener = listener;
+        preferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     @SuppressLint("MissingPermission")
@@ -73,6 +81,14 @@ public final class DeviceDiscoveryController {
         ListView listView = content.findViewById(R.id.deviceListView);
         listAdapter = new DeviceListAdapter(activity, devices);
         listView.setAdapter(listAdapter);
+        CheckBox classicOnlyCheckBox = content.findViewById(R.id.classicOnlyCheckBox);
+        classicOnly = preferences.getBoolean(KEY_CLASSIC_ONLY, true);
+        classicOnlyCheckBox.setChecked(classicOnly);
+        classicOnlyCheckBox.setOnCheckedChangeListener((buttonView, checked) -> {
+            classicOnly = checked;
+            preferences.edit().putBoolean(KEY_CLASSIC_ONLY, checked).apply();
+            refreshVisibleDevices();
+        });
 
         dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.select_target)
@@ -119,6 +135,18 @@ public final class DeviceDiscoveryController {
 
     public boolean isShowing() {
         return dialog != null && dialog.isShowing();
+    }
+
+    private void refreshVisibleDevices() {
+        devices.clear();
+        for (DiscoveredDevice device : devicesByAddress.values()) {
+            if (!classicOnly || "CLASSIC".equals(device.getBluetoothType())) {
+                devices.add(device);
+            }
+        }
+        if (listAdapter != null) {
+            listAdapter.notifyDataSetChanged();
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -279,10 +307,7 @@ public final class DeviceDiscoveryController {
                     BluetoothClassFormatter.format(bluetoothClass),
                     rssi);
             devicesByAddress.put(address, discovered);
-            devices.add(discovered);
-            if (listAdapter != null) {
-                listAdapter.notifyDataSetChanged();
-            }
+            refreshVisibleDevices();
         } catch (SecurityException exception) {
             listener.onBluetoothBecameUnavailable();
             dismiss();
